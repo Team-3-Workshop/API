@@ -20,7 +20,7 @@ module.exports = {
       firstName: "string",
       lastName: "string",
       email: "string",
-      password: "string"
+    //   password: "string"
     };
 
     const validated = v.validate(req.body, schema);
