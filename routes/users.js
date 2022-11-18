@@ -7,11 +7,12 @@ router.route('/')
   .get(userController.index)
   .post(userController.store);
   
+router.get('/search', userController.search);
+
 router.route('/:id')
   .get(userController.show)
   .patch(userController.update)
   .delete(userController.delete);
   
-router.get('/search', userController.search);
 
 module.exports = router;

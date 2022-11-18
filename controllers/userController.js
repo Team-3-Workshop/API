@@ -8,7 +8,7 @@ const v = new Validator();
 module.exports = {
   index: async (req, res) => {
     const users = await User.findAll({
-      // order: [['createdAt', 'asc']]
+      order: [['firstName', 'asc']]
     });
 
     return res.json(users);
@@ -46,9 +46,17 @@ module.exports = {
   },
   store: async (req, res) => {
     const schema = {
-      firstName: "string",
-      lastName: "string",
-      email: "string",
+      firstName: {
+        type: "string",
+        alpha: true,
+        min: 6,
+      },
+      lastName: {
+        type: "string",
+        alpha: true,
+        min: 6,
+      },
+      email: "email",
     //   password: "string"
     };
 
