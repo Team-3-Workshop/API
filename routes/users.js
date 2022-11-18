@@ -6,10 +6,12 @@ const userController = require("../controllers/userController");
 router.route('/')
   .get(userController.index)
   .post(userController.store);
-
+  
 router.route('/:id')
   .get(userController.show)
   .patch(userController.update)
   .delete(userController.delete);
+  
+router.get('/search', userController.search);
 
 module.exports = router;

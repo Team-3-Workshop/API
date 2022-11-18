@@ -1,13 +1,42 @@
 const Validator = require("fastest-validator");
 const { User } = require("../models");
+const { Op } = require('sequelize');
+const e = require("express");
 
 const v = new Validator();
 
 module.exports = {
   index: async (req, res) => {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      // order: [['createdAt', 'asc']]
+    });
 
     return res.json(users);
+  },
+  search: async (req, res) => {
+    const search = req.query.keyword;
+    
+    let users = await User.findAll({
+      where: {
+        [Op.or]: [{
+          firstName: {
+            [Op.like]: `%${search}%`
+          }
+        }, {
+          lastName: {
+            [Op.like]: `%${search}%`
+          }
+        }]
+      }
+    });
+
+    if(users.length > 0) {
+      return res.status(200).json(users);
+    } else {
+      return res.status(404).json({
+        message: "User not found!"
+      });
+    }
   },
   show: async (req, res) => {
     const id = req.params.id;
