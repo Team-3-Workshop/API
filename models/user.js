@@ -3,6 +3,7 @@
 const { Model } = require("sequelize");
 const { Sequelize } = require(".");
 const bcrypt = require("bcrypt");
+const role = require('./role');
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -13,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.belongsTo(models.Role, {
+        foreignKey: 'roleId'
+      });
     }
   }
   User.init(
@@ -33,7 +37,12 @@ module.exports = (sequelize, DataTypes) => {
           const hash = bcrypt.hashSync(value, salt);
           this.setDataValue('password', hash);
         }
-      }
+      },
+      roleId: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
+      },
     },
     {
       sequelize,

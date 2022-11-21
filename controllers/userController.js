@@ -1,16 +1,17 @@
 const Validator = require("fastest-validator");
-const { User } = require("../models");
-const { Op } = require("sequelize");
-const e = require("express");
-const user = require("../models/user");
+const { User, Role, sequelize } = require("../models");
+const { Op, QueryTypes } = require("sequelize");
 
 const v = new Validator();
 
 module.exports = {
   index: async (req, res) => {
-    const users = await User.findAll({
-      order: [["firstName", "asc"]],
-    });
+    const users = await sequelize.query(
+      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id ORDER BY Users.firstName ASC",
+      {
+        type: QueryTypes.SELECT
+      }
+    );
 
     return res.json({
       success: true,
@@ -21,22 +22,13 @@ module.exports = {
   search: async (req, res) => {
     const search = req.query.keyword;
 
-    let users = await User.findAll({
-      where: {
-        [Op.or]: [
-          {
-            firstName: {
-              [Op.like]: `%${search}%`,
-            },
-          },
-          {
-            lastName: {
-              [Op.like]: `%${search}%`,
-            },
-          },
-        ],
-      },
-    });
+    const users = await sequelize.query(
+      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id WHERE firstName LIKE :search ORDER BY Users.firstName ASC",
+      {
+        replacements: { search: `%${search}%` },
+        type: QueryTypes.SELECT
+      }
+    );
 
     if (users.length > 0) {
       return res.status(200).json({
@@ -54,13 +46,19 @@ module.exports = {
   },
   show: async (req, res) => {
     const id = req.params.id;
-    const users = await User.findByPk(id);
+    const users = await sequelize.query(
+      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id WHERE Users.id = :id ORDER BY Users.firstName ASC",
+      {
+        replacements: { id: id },
+        type: QueryTypes.SELECT
+      }
+    );
 
     return res.json(
       {
         success: true,
         message: "User Found",
-        data: users,
+        data: users[0],
       } || {
         success: false,
         message: "User not found!",
@@ -73,15 +71,18 @@ module.exports = {
       firstName: {
         type: "string",
         alpha: true,
-        min: 6,
       },
       lastName: {
         type: "string",
         alpha: true,
-        min: 6,
       },
       email: "email",
-      password: "string",
+      password: {
+        type: "string",
+        min: 8,
+        singleLine: true
+      },
+      roleId: "string"
     };
 
     const validated = v.validate(req.body, schema);
@@ -96,7 +97,7 @@ module.exports = {
 
     const user = await User.create(req.body);
 
-    res.json({
+    res.status(201).json({
       success: true,
       message: "User has been Submitted successfully!",
       data: user,
@@ -120,6 +121,7 @@ module.exports = {
       lastName: "string|optional",
       email: "string|optional",
       password: "string|optional",
+      roleId: "string|optional"
     };
 
     const validated = v.validate(req.body, schema);
@@ -133,7 +135,7 @@ module.exports = {
     }
 
     user = await user.update(req.body);
-    res.json({
+    res.status(200).json({
       success: true,
       message: "User updated successfully",
       data: user,
@@ -154,10 +156,10 @@ module.exports = {
 
     await user.destroy();
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "User deleted successfully",
-      data: user,
+      data: null,
     });
   },
 };
