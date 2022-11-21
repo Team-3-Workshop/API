@@ -1,6 +1,6 @@
 const Validator = require("fastest-validator");
-const { User, Role, sequelize } = require("../models");
-const { Op, QueryTypes } = require("sequelize");
+const { User, sequelize } = require("../models");
+const { QueryTypes } = require("sequelize");
 
 const v = new Validator();
 
