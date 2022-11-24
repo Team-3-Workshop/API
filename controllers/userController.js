@@ -6,12 +6,9 @@ const v = new Validator();
 
 module.exports = {
   index: async (req, res) => {
-    const users = await sequelize.query(
-      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id ORDER BY Users.firstName ASC",
-      {
-        type: QueryTypes.SELECT
-      }
-    );
+    const users = await User.findAll({
+      order: ['firstName', 'ASC']
+    });
 
     return res.json({
       success: true,
