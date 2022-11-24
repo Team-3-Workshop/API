@@ -6,8 +6,11 @@ const v = new Validator();
 
 module.exports = {
   index: async (req, res) => {
+    // const users = await sequelize.query(
+    //   "SELECT * FROM `Users` ORDER BY `firstName`"
+    // );
     const users = await User.findAll({
-      order: ['firstName', 'ASC']
+      order: [['firstName', 'ASC']]
     });
 
     return res.json({
@@ -20,7 +23,7 @@ module.exports = {
     const search = req.query.keyword;
 
     const users = await sequelize.query(
-      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id WHERE firstName LIKE :search ORDER BY Users.firstName ASC",
+      "SELECT * FROM Users WHERE fullName LIKE :search ORDER BY Users.firstName ASC",
       {
         replacements: { search: `%${search}%` },
         type: QueryTypes.SELECT
@@ -43,19 +46,21 @@ module.exports = {
   },
   show: async (req, res) => {
     const id = req.params.id;
-    const users = await sequelize.query(
-      "SELECT Users.id, Users.firstName, Users.lastName, Users.email, Users.password, Roles.role, Users.createdAt, Users.updatedAt FROM `Users` JOIN `Roles` ON Users.roleId = Roles.id WHERE Users.id = :id ORDER BY Users.firstName ASC",
-      {
-        replacements: { id: id },
-        type: QueryTypes.SELECT
-      }
-    );
+    // const users = await sequelize.query(
+    //   "SELECT * FROM Users WHERE id=:id",
+    //   {
+    //     replacements: { id: id },
+    //     type: QueryTypes.SELECT
+    //   }
+    // );
+
+    const users = await User.findByPk(id);
 
     return res.json(
       {
         success: true,
         message: "User Found",
-        data: users[0],
+        data: users,
       } || {
         success: false,
         message: "User not found!",
@@ -73,13 +78,35 @@ module.exports = {
         type: "string",
         alpha: true,
       },
+      fullName: {
+        type: "string",
+        alpha: true
+      },
+      citizen: {
+        type: "enum",
+        value: ["WNI", 'WNA']
+      },
+      nik: {
+        type:"string",
+        length: 16,
+        numeric: true
+      },
+      adreess : {
+        type: "string",
+      },
+      date: {
+        type: "string"
+      },
+      phone: {
+        type: "string",
+        numeric: true
+      },
       email: "email",
       password: {
         type: "string",
         min: 8,
         singleLine: true
-      },
-      roleId: "string"
+      }
     };
 
     const validated = v.validate(req.body, schema);
