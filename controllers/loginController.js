@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User } = require("../db/models");
 const bcrypt = require("bcrypt");
 const Validator = require("fastest-validator");
 

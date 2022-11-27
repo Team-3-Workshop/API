@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Transaction, {
+        foreignKeyConstraint: 'userId'
+      });
     }
   }
   User.init(
@@ -25,13 +28,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       firstName: DataTypes.STRING,
       lastName: DataTypes.STRING,
-      fullname: DataTypes.STRING,
+      fullName: DataTypes.STRING,
       citizen: DataTypes.ENUM("WNI", "WNA"),
       nik: DataTypes.STRING,
       address: DataTypes.STRING,
       date: DataTypes.DATEONLY,
       phone: DataTypes.STRING,
-      email: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        unique: true
+      },
       password: {
         type: DataTypes.STRING,
         set(value) {

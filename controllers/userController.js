@@ -1,14 +1,11 @@
 const Validator = require("fastest-validator");
-const { User, sequelize } = require("../models");
+const { User, sequelize } = require("../db/models");
 const { QueryTypes } = require("sequelize");
 
 const v = new Validator();
 
 module.exports = {
   index: async (req, res) => {
-    // const users = await sequelize.query(
-    //   "SELECT * FROM `Users` ORDER BY `firstName`"
-    // );
     const users = await User.findAll({
       order: [['firstName', 'ASC']]
     });
@@ -80,18 +77,17 @@ module.exports = {
       },
       fullName: {
         type: "string",
-        alpha: true
       },
       citizen: {
         type: "enum",
-        value: ["WNI", 'WNA']
+        values: ["WNI", 'WNA']
       },
       nik: {
         type:"string",
         length: 16,
         numeric: true
       },
-      adreess : {
+      address : {
         type: "string",
       },
       date: {
@@ -101,11 +97,18 @@ module.exports = {
         type: "string",
         numeric: true
       },
-      email: "email",
+      email: {
+        type: "email",
+        unique: true
+      },
       password: {
         type: "string",
         min: 8,
         singleLine: true
+      },
+      role: {
+        type: "enum",
+        values: ["user", "admin"]
       }
     };
 
@@ -141,11 +144,59 @@ module.exports = {
     }
 
     const schema = {
-      firstName: "string|optional",
-      lastName: "string|optional",
-      email: "string|optional",
-      password: "string|optional",
-      roleId: "string|optional"
+      firstName: {
+        type: "string",
+        alpha: true,
+        optional: true
+      },
+      lastName: {
+        type: "string",
+        alpha: true,
+        optional: true
+      },
+      fullName: {
+        type: "string",
+        optional: true
+      },
+      citizen: {
+        type: "enum",
+        values: ["WNI", 'WNA'],
+        optional: true
+      },
+      nik: {
+        type:"string",
+        length: 16,
+        numeric: true,
+        optional: true
+      },
+      address : {
+        type: "string",
+        optional: true
+      },
+      date: {
+        type: "string",
+        optional: true
+      },
+      phone: {
+        type: "string",
+        numeric: true,
+        optional: true
+      },
+      email: {
+        type: "email",
+        optional: true,
+      },
+      password: {
+        type: "string",
+        min: 8,
+        singleLine: true,
+        optional: true
+      },
+      role: {
+        type: "enum",
+        values: ["user", "admin"],
+        optional: true
+      }
     };
 
     const validated = v.validate(req.body, schema);
