@@ -2,18 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Transactions', {
+    await queryInterface.createTable('DetailTransactions', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4
       },
-      quantity: {
+      total: {
         type: Sequelize.STRING
       },
-      userId: {
-        type: Sequelize.UUID,
+      transactionId: {
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
@@ -25,21 +25,21 @@ module.exports = {
       }
     });
 
-    await queryInterface.addConstraint('Transactions', {
-      fields: ['userId'],
+    await queryInterface.addConstraint('DetailTransactions', {
+      fields: ['transactionId'],
       type: 'foreign key',
-      name: 'user_transaction_association',
+      name: 'transaction_detailTransaction_association',
       references: {
-        table: 'Users',
+        table: 'Transactions',
         field: 'id' 
       },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL'
-    })
+    });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeConstraint('Transactions', 'user_transaction_association');
+    await queryInterface.removeConstraint('DetailTransactions', 'transaction_detailTransaction_association');
 
-    await queryInterface.dropTable('Transactions');
+    await queryInterface.dropTable('detailTransactions');
   }
 };
