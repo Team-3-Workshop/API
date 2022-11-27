@@ -66,6 +66,17 @@ module.exports = {
       }
     );
   },
+  transaction: async (req, res) => {
+    const id = req.params.id;
+
+    const transactions = await Transaction.findAll({
+      where: {
+        userId: id
+      }
+    });
+
+    return res.json(transactions)
+  },
   store: async (req, res) => {
     const schema = {
       firstName: {
