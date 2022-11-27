@@ -1,5 +1,5 @@
 const Validator = require("fastest-validator");
-const { User, sequelize } = require("../db/models");
+const { User, sequelize, Transaction } = require("../db/models");
 const { QueryTypes } = require("sequelize");
 
 const v = new Validator();
@@ -7,7 +7,8 @@ const v = new Validator();
 module.exports = {
   index: async (req, res) => {
     const users = await User.findAll({
-      order: [['firstName', 'ASC']]
+      include: Transaction,
+      order: [['firstName', 'ASC']],
     });
 
     return res.json({

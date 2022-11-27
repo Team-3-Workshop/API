@@ -11,11 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Transaction.belongsTo(models.User);
-      Transaction.hasOne(models.DetailTransaction);
+      Transaction.belongsTo(models.User, {
+        foreignKey: 'userId',
+        as: 'user'
+      });
+      // Transaction.hasOne(models.DetailTransaction);
     }
   }
   Transaction.init({
+    id: {
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      allowNull: false,
+    },
     quantity: DataTypes.INTEGER,
     userId: {
       type: DataTypes.UUID,

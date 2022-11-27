@@ -10,7 +10,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4
       },
       total: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       transactionId: {
         type: Sequelize.UUID
