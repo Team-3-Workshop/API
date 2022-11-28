@@ -45,17 +45,19 @@ module.exports = {
   show: async (req, res) => {
     const id = req.params.id;
 
-    const users = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+      include: Transaction
+    });
 
     return res.json(
       {
         success: true,
         message: "User Found",
-        data: users,
+        data: user,
       } || {
         success: false,
         message: "User not found!",
-        data: users,
+        data: user,
       }
     );
   },

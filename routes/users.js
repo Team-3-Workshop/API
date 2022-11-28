@@ -4,8 +4,7 @@ var router = express.Router();
 const userController = require("../controllers/userController");
 
 router.route('/')
-  .get(userController.index)
-  // .post(userController.store);
+  .get(userController.index);
   
 router.get('/search', userController.search);
 
