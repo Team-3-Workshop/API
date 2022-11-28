@@ -4,12 +4,12 @@ var router = express.Router();
 const userController = require("../controllers/userController");
 
 router.route('/')
-  .get(userController.index);
+  .get(userController.get);
   
 router.get('/search', userController.search);
 
 router.route('/:id')
-  .get(userController.show)
+  .get(userController.find)
   .patch(userController.update)
   .delete(userController.delete);
 

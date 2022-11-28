@@ -5,7 +5,7 @@ const { QueryTypes } = require("sequelize");
 const v = new Validator();
 
 module.exports = {
-  index: async (req, res) => {
+  get: async (req, res) => {
     const users = await User.findAll({
       include: Transaction,
       order: [['firstName', 'ASC']],
@@ -42,7 +42,7 @@ module.exports = {
       });
     }
   },
-  show: async (req, res) => {
+  find: async (req, res) => {
     const id = req.params.id;
 
     const user = await User.findByPk(id, {
@@ -72,71 +72,6 @@ module.exports = {
 
     return res.status(200).json(transactions)
   },
-  // store: async (req, res) => {
-  //   const schema = {
-  //     firstName: {
-  //       type: "string",
-  //       alpha: true,
-  //     },
-  //     lastName: {
-  //       type: "string",
-  //       alpha: true,
-  //     },
-  //     fullName: {
-  //       type: "string",
-  //     },
-  //     citizen: {
-  //       type: "enum",
-  //       values: ["WNI", 'WNA']
-  //     },
-  //     nik: {
-  //       type:"string",
-  //       length: 16,
-  //       numeric: true
-  //     },
-  //     address : {
-  //       type: "string",
-  //     },
-  //     date: {
-  //       type: "string"
-  //     },
-  //     phone: {
-  //       type: "string",
-  //       numeric: true
-  //     },
-  //     email: {
-  //       type: "email",
-  //       unique: true
-  //     },
-  //     password: {
-  //       type: "string",
-  //       min: 8,
-  //       singleLine: true
-  //     },
-  //     role: {
-  //       type: "enum",
-  //       values: ["user", "admin"]
-  //     }
-  //   };
-
-  //   const validated = v.validate(req.body, schema);
-
-  //   if (validated.length) {
-  //     return res.status(400).json({
-  //       success: false,
-  //       message: validated[0].message,
-  //       data: null,
-  //     });
-  //   }
-
-  //   const user = await User.create(req.body);
-
-  //   res.status(201).json({
-  //     success: true,
-  //     message: "User has been Submitted successfully!",
-  //     data: user,
-  //   });
-  // },
   update: async (req, res) => {
     const id = req.params.id;
 

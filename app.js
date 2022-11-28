@@ -8,7 +8,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
-var transactionRouter = require('./routes/transaction');
+var hotelsRouter = require('./routes/hotels');
+var transactionsRouter = require('./routes/transactions');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/transactions', transactionRouter);
+app.use('/api/hotels', hotelsRouter);
+app.use('/api/transactions', transactionsRouter);
 
 module.exports = app;
