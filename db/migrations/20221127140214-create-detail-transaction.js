@@ -40,6 +40,6 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     await queryInterface.removeConstraint('DetailTransactions', 'transaction_detailTransaction_association');
 
-    await queryInterface.dropTable('detailTransactions');
+    await queryInterface.dropTable('DetailTransactions');
   }
 };

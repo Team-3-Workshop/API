@@ -5,7 +5,7 @@ const userController = require("../controllers/userController");
 
 router.route('/')
   .get(userController.index)
-  .post(userController.store);
+  // .post(userController.store);
   
 router.get('/search', userController.search);
 
