@@ -3,8 +3,7 @@ var router = express.Router();
 
 const userController = require("../controllers/userController");
 
-router.route('/')
-  .get(userController.get);
+router.get('/', userController.get);
   
 router.get('/search', userController.search);
 
@@ -13,7 +12,8 @@ router.route('/:id')
   .patch(userController.update)
   .delete(userController.delete);
 
-router.get('/:id/transactions', userController.transaction);
+router.get('/:id/transactions', userController.getTransactions);
+// router.get('/:id/transactions/:trans', userController.getTransactions);
   
 
 module.exports = router;

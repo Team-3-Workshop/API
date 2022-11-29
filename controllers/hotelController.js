@@ -45,27 +45,65 @@ module.exports = {
   },
   create: async (req, res) => {
     const schema = {
-        name: {
-            type: "string"
-        }
-    }
+      name: {
+        type: "string",
+      },
+    };
 
     const validated = v.validate(req.body, schema);
 
-    if(validated.length) {
-        return res.status(400).json({
-            success: false,
-            message: validated[0].message,
-            data: null
-        });
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
     }
 
     const hotel = await Hotel.create(req.body);
 
     res.status(201).json({
-        success: true,
-        message: "Hotel has been Submited successfully!",
-        data: hotel
+      success: true,
+      message: "Hotel has been Submited successfully!",
+      data: hotel,
     });
-  }
+  },
+  update: async (req, res) => {
+    const id = req.params.id;
+    console.log(id)
+
+    let hotel = await Hotel.findByPk(id);
+
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hotel not found!",
+        data: user,
+      });
+    }
+
+    const schema = {
+      name: {
+        type: "string",
+      },
+    };
+
+    const validated = v.validate(req.body, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    hotel = await Hotel.update(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Hotel updated successfully",
+      data: hotel,
+    });
+  },
 };

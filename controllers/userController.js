@@ -1,6 +1,6 @@
 const Validator = require("fastest-validator");
 const { User, sequelize, Transaction } = require("../db/models");
-const { QueryTypes } = require("sequelize");
+const { QueryTypes, Op } = require("sequelize");
 
 const v = new Validator();
 
@@ -8,7 +8,7 @@ module.exports = {
   get: async (req, res) => {
     const users = await User.findAll({
       include: Transaction,
-      order: [['firstName', 'ASC']],
+      order: [["firstName", "ASC"]],
     });
 
     return res.json({
@@ -24,7 +24,7 @@ module.exports = {
       "SELECT * FROM Users WHERE fullName LIKE :search ORDER BY Users.firstName ASC",
       {
         replacements: { search: `%${search}%` },
-        type: QueryTypes.SELECT
+        type: QueryTypes.SELECT,
       }
     );
 
@@ -46,7 +46,7 @@ module.exports = {
     const id = req.params.id;
 
     const user = await User.findByPk(id, {
-      include: Transaction
+      include: Transaction,
     });
 
     return res.json(
@@ -61,16 +61,53 @@ module.exports = {
       }
     );
   },
-  transaction: async (req, res) => {
+  getTransactions: async (req, res) => {
     const id = req.params.id;
 
     const transactions = await Transaction.findAll({
       where: {
-        userId: id
-      }
+        userId: id,
+      },
     });
 
-    return res.status(200).json(transactions)
+    return res.status(200).json(transactions);
+  },
+  getTransaction: async (req, res) => {
+    const id = req.params.id;
+    const trans = req.params.trans;
+
+    // const transaction = await Transaction.findAll({
+    //   where: {
+    //     [Op.and]: [{ id: trans }, { userId: id }],
+    //   },
+    // });
+
+    // const transaction = await sequelize.query(
+    //   "SELECT * FROM Transactions WHERE userId=:id AND id=:trans",
+    //   {
+    //     replacements: { 
+    //       id: id,
+    //       trans: trans
+    //      },
+    //     type: QueryTypes.SELECT,
+    //   }
+    // )
+
+    const transaction = await Transaction.findByPk(trans);
+
+    if(!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "User Transaction not Found",
+        data: transaction
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: true,
+      data: transaction
+    });
   },
   update: async (req, res) => {
     const id = req.params.id;
@@ -89,40 +126,40 @@ module.exports = {
       firstName: {
         type: "string",
         alpha: true,
-        optional: true
+        optional: true,
       },
       lastName: {
         type: "string",
         alpha: true,
-        optional: true
+        optional: true,
       },
       fullName: {
         type: "string",
-        optional: true
+        optional: true,
       },
       citizen: {
         type: "enum",
-        values: ["WNI", 'WNA'],
-        optional: true
+        values: ["WNI", "WNA"],
+        optional: true,
       },
       nik: {
-        type:"string",
+        type: "string",
         length: 16,
         numeric: true,
-        optional: true
+        optional: true,
       },
-      address : {
+      address: {
         type: "string",
-        optional: true
+        optional: true,
       },
       date: {
         type: "string",
-        optional: true
+        optional: true,
       },
       phone: {
         type: "string",
         numeric: true,
-        optional: true
+        optional: true,
       },
       email: {
         type: "email",
@@ -132,13 +169,13 @@ module.exports = {
         type: "string",
         min: 8,
         singleLine: true,
-        optional: true
+        optional: true,
       },
       role: {
         type: "enum",
         values: ["user", "admin"],
-        optional: true
-      }
+        optional: true,
+      },
     };
 
     const validated = v.validate(req.body, schema);
