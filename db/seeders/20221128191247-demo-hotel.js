@@ -1,14 +1,6 @@
 "use strict";
 
 const { v4: uuidv4 } = require("uuid");
-const bcrypt = require("bcrypt");
-
-function hash(pass) {
-  const salt = bcrypt.genSaltSync();
-  const hash = bcrypt.hashSync(pass, salt);
-
-  return hash;
-}
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {

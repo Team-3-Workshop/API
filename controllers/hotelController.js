@@ -14,7 +14,7 @@ module.exports = {
       return res.status(404).json({
         success: false,
         message: "Hotel not Found",
-        data: hotel,
+        data: hotels,
       });
     }
 

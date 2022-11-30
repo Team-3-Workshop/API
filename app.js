@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var hotelsRouter = require('./routes/hotels');
 var transactionsRouter = require('./routes/transactions');
+var transportationsRouter = require('./routes/transportations');
 
 var app = express();
 
@@ -24,5 +25,6 @@ app.use('/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/hotels', hotelsRouter);
 app.use('/api/transactions', transactionsRouter);
+app.use('/api/transportations', transportationsRouter);
 
 module.exports = app;
