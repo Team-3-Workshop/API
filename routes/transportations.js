@@ -5,5 +5,11 @@ const transportationController = require('../controllers/transportationControlle
 
 router.route('/')
     .get(transportationController.get)
+    .post(transportationController.create)
+
+router.route('/:id')
+    .get(transportationController.find)
+    .patch(transportationController.update)
+    .delete(transportationController.delete)
 
 module.exports = router
