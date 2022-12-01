@@ -2,7 +2,10 @@
 
 ## User
 
-* Get Users `localhost:3000/api/users`
-Respons: 
-  - 404
-  Menampilkan seluruh data user
+*`localhost:3000/api/users`
++ GET
+  Respons: 
+    - _404_ Data user kosong/tidak ditemukan
+    - _200_ Menampilkan seluruh data user
+
++ POST User `localhost:3000/api/users`
