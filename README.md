@@ -2,5 +2,7 @@
 
 ## User
 
-* Get Users
-`localhost:3000/api/users`
+* Get Users `localhost:3000/api/users`
+Respons: 
+  - 404
+  Menampilkan seluruh data user
