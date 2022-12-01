@@ -3,13 +3,13 @@
 ## User
 
 * `localhost:3000/api/users`
-### GET
+###### GET
   - Response :
       - _404_ Data user kosong/tidak ditemukan
       - _200_ Menampilkan seluruh data user
 
 * `localhost:3000/api/users/{userId}`
-### GET
+###### GET
   - `{userId}` input ID user
   - Response :
     - _404_ Data user tidak ditemukan
