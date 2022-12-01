@@ -4,7 +4,7 @@
 
 *`localhost:3000/api/users`
 + GET
-  Respons: 
+  Respons:[^1]
     - _404_ Data user kosong/tidak ditemukan
     - _200_ Menampilkan seluruh data user
 
