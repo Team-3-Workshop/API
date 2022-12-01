@@ -7,7 +7,7 @@ router.route('/')
     .get(tourGuideController.get)
     .post(tourGuideController.create)
 
-router.route(':id')
+router.route('/:id')
     .get(tourGuideController.find)
     .patch(tourGuideController.update)
     .delete(tourGuideController.delete)

@@ -84,6 +84,7 @@ module.exports = {
     const schema = {
       name: {
         type: "string",
+        optional: true
       },
     };
 

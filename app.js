@@ -25,7 +25,7 @@ app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/hotels', hotelsRouter);
-app.use('/api/tourGuide', tourGuideRouter);
+app.use('/api/tourGuides', tourGuideRouter);
 app.use('/api/transactions', transactionsRouter);
 app.use('/api/transportations', transportationsRouter);
 
