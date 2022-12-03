@@ -54,6 +54,16 @@ module.exports = {
       fullName: {
         type: "string",
       },
+      address: {
+        type: "string",
+      },
+      phone: {
+        type: "string",
+        numeric: true
+      },
+      email: {
+        type: "email"
+      }
     };
 
     const validated = v.validate(req.body, schema);
@@ -102,6 +112,19 @@ module.exports = {
         type: "string",
         optional: true,
       },
+      address: {
+        type: "string",
+        optional: true
+      },
+      phone: {
+        type: "string",
+        numeric: true,
+        optional: true
+      },
+      email: {
+        type: "email",
+        optional: true
+      }
     };
 
     const validated = v.validate(req.body, schema);

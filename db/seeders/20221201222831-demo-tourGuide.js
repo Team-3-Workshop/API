@@ -21,6 +21,9 @@ module.exports = {
         firstName: "Kevin",
         lastName: "Jentara",
         fullName: "Kevin Jentara",
+        address: "Jln. Kemayoran, Jember",
+        phone: "089786756354",
+        email: "kevin@gmail.com",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -29,6 +32,9 @@ module.exports = {
         firstName: "Tegar",
         lastName: "Sanjaya",
         fullName: "Tegar Maulana Sanjaya",
+        address: "Jln. Tegal, Jember",
+        phone: "08677564542312",
+        email: "tegar@gmail.com",
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -36,7 +42,10 @@ module.exports = {
         id: uuidv4(),
         firstName: "Rendy",
         lastName: "Panduwinata",
-        fullName: "Panduwinata",
+        fullName: "Rendy Panduwinata",
+        address: "Jln. Riau, Situbondo",
+        phone: "087612345678",
+        email: "rendy@gmail.com",
         createdAt: new Date(),
         updatedAt: new Date()
       },
