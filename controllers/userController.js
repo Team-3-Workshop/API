@@ -1,12 +1,74 @@
 const Validator = require("fastest-validator");
-const { User, sequelize, Transaction } = require("../db/models");
+const { User, sequelize, Sequelize, Transaction } = require("../db/models");
 const { QueryTypes, Op } = require("sequelize");
 
 const v = new Validator();
 
 module.exports = {
   get: async (req, res) => {
+    const where = {};
+
+    const schema = {
+      firstName: {
+        type: "string",
+        alpha: true,
+        optional: true,
+      },
+      lastName: {
+        type: "string",
+        alpha: true,
+        optional: true,
+      },
+      fullName: {
+        type: "string",
+        optional: true,
+      },
+      citizen: {
+        type: "enum",
+        values: ["WNI", 'WNA'],
+        optional: true,
+      },
+      nik: {
+        type:"string",
+        length: 16,
+        numeric: true,
+        optional: true,
+      },
+      address : {
+        type: "string",
+        optional: true,
+      },
+      phone: {
+        type: "string",
+        numeric: true,
+        optional: true,
+      }
+    };
+
+    const validated = v.validate(req.query, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    const { firstName, lastName, fullName, citizen, nik, address, phone } = req.query;
+
+    if(firstName) where.firstName = { [Sequelize.Op.like]: `%${firstName}%` };
+    if(lastName) where.lastName = { [Sequelize.Op.like]: `%${lastName}%` };
+    if(fullName) where.fullName = { [Sequelize.Op.like]: `%${fullName}%` };
+    if(citizen) where.citizen = { [Sequelize.Op.like]: `%${citizen}%` };
+    if(nik) where.nik = { [Sequelize.Op.like]: `%${nik}%` };
+    if(address) where.address = { [Sequelize.Op.like]: `%${address}%` };
+    if(phone) where.phone = { [Sequelize.Op.like]: `%${phone}%` };
+
     const users = await User.findAll({
+      where: {
+        ...where
+      },
       include: Transaction,
       order: [["firstName", "ASC"]],
     });
@@ -16,31 +78,6 @@ module.exports = {
       message: "Users Found",
       data: users,
     });
-  },
-  search: async (req, res) => {
-    const search = req.query.keyword;
-
-    const users = await sequelize.query(
-      "SELECT * FROM Users WHERE fullName LIKE :search ORDER BY Users.firstName ASC",
-      {
-        replacements: { search: `%${search}%` },
-        type: QueryTypes.SELECT,
-      }
-    );
-
-    if (users.length > 0) {
-      return res.status(200).json({
-        success: true,
-        message: "User Found",
-        data: users,
-      });
-    } else {
-      return res.status(404).json({
-        success: false,
-        message: "User not found!",
-        data: users,
-      });
-    }
   },
   find: async (req, res) => {
     const id = req.params.id;

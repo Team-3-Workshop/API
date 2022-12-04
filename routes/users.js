@@ -4,8 +4,6 @@ var router = express.Router();
 const userController = require("../controllers/userController");
 
 router.get('/', userController.get);
-  
-router.get('/search', userController.search);
 
 router.route('/:id')
   .get(userController.find)
