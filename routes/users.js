@@ -10,7 +10,10 @@ router.route('/:id')
   .patch(userController.update)
   .delete(userController.delete);
 
-router.get('/:id/transactions', userController.getTransactions);
+router.route('/:id/transactions')
+  .get(userController.getTransactions)
+  .post(userController.createTransaction);
+
 // router.get('/:id/transactions/:trans', userController.getTransactions);
   
 

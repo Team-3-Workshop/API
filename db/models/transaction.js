@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Transaction.belongsTo(models.User);
+      Transaction.belongsTo(models.User, {
+        foreignKey: 'id'
+      });
       // Transaction.hasOne(models.DetailTransaction);
     }
   }
@@ -23,16 +25,18 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     quantity: DataTypes.INTEGER,
-    userId: {
-      type: DataTypes.UUID,
-      references:{
-        model: 'User',
-        key: 'id'
-      }
-    }
+    // userId: {
+    //   type: DataTypes.UUID,
+    //   references:{
+    //     model: 'User',
+    //     key: 'id'
+    //   }
+    // },
+    userId: DataTypes.UUID
   }, {
     sequelize,
     modelName: 'Transaction',
+    tableName: 'Transactions'
   });
   return Transaction;
 };

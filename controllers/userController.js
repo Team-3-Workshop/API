@@ -25,16 +25,16 @@ module.exports = {
       },
       citizen: {
         type: "enum",
-        values: ["WNI", 'WNA'],
+        values: ["WNI", "WNA"],
         optional: true,
       },
       nik: {
-        type:"string",
+        type: "string",
         length: 16,
         numeric: true,
         optional: true,
       },
-      address : {
+      address: {
         type: "string",
         optional: true,
       },
@@ -42,7 +42,7 @@ module.exports = {
         type: "string",
         numeric: true,
         optional: true,
-      }
+      },
     };
 
     const validated = v.validate(req.query, schema);
@@ -55,25 +55,32 @@ module.exports = {
       });
     }
 
-    const { firstName, lastName, fullName, citizen, nik, address, phone } = req.query;
+    const { firstName, lastName, fullName, citizen, nik, address, phone } =
+      req.query;
 
-    if(firstName) where.firstName = { [Sequelize.Op.like]: `%${firstName}%` };
-    if(lastName) where.lastName = { [Sequelize.Op.like]: `%${lastName}%` };
-    if(fullName) where.fullName = { [Sequelize.Op.like]: `%${fullName}%` };
-    if(citizen) where.citizen = { [Sequelize.Op.like]: `%${citizen}%` };
-    if(nik) where.nik = { [Sequelize.Op.like]: `%${nik}%` };
-    if(address) where.address = { [Sequelize.Op.like]: `%${address}%` };
-    if(phone) where.phone = { [Sequelize.Op.like]: `%${phone}%` };
+    if (firstName) where.firstName = { [Sequelize.Op.like]: `%${firstName}%` };
+    if (lastName) where.lastName = { [Sequelize.Op.like]: `%${lastName}%` };
+    if (fullName) where.fullName = { [Sequelize.Op.like]: `%${fullName}%` };
+    if (citizen) where.citizen = { [Sequelize.Op.like]: `%${citizen}%` };
+    if (nik) where.nik = { [Sequelize.Op.like]: `%${nik}%` };
+    if (address) where.address = { [Sequelize.Op.like]: `%${address}%` };
+    if (phone) where.phone = { [Sequelize.Op.like]: `%${phone}%` };
 
     const users = await User.findAll({
-      where: {
-        ...where
-      },
+      where,
       include: Transaction,
       order: [["firstName", "ASC"]],
     });
 
-    return res.json({
+    if (!users.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Users not Found",
+        data: users,
+      });
+    }
+
+    res.json({
       success: true,
       message: "Users Found",
       data: users,
@@ -110,7 +117,7 @@ module.exports = {
     return res.status(200).json(transactions);
   },
   getTransaction: async (req, res) => {
-    const id = req.params.id;
+    // const id = req.params.id;
     const trans = req.params.trans;
 
     // const transaction = await Transaction.findAll({
@@ -122,7 +129,7 @@ module.exports = {
     // const transaction = await sequelize.query(
     //   "SELECT * FROM Transactions WHERE userId=:id AND id=:trans",
     //   {
-    //     replacements: { 
+    //     replacements: {
     //       id: id,
     //       trans: trans
     //      },
@@ -130,21 +137,53 @@ module.exports = {
     //   }
     // )
 
-    const transaction = await Transaction.findByPk(trans);
+    // const transaction = await Transaction.findByPk(trans);
+    const transaction = await sequelize.query("SELECT * FROM `Transactions` WHERE `id`=" + trans);
 
-    if(!transaction) {
+    if (!transaction) {
       return res.status(404).json({
         success: false,
         message: "User Transaction not Found",
-        data: transaction
+        data: transaction,
       });
     }
 
     res.status(200).json({
       success: true,
       message: true,
-      data: transaction
+      data: transaction,
     });
+  },
+  createTransaction: async (req, res) => {
+    const id = req.params.id;
+
+    const schema = {
+      quantity: {
+        type: 'number',
+        integer: true
+      }
+    }
+
+    const validated = v.validate(req.body, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    const transaction = await Transaction.create({
+      quantity: req.body.quantity,
+      userId: id
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Transaction success",
+      data: transaction
+    })
   },
   update: async (req, res) => {
     const id = req.params.id;
@@ -226,6 +265,7 @@ module.exports = {
     }
 
     user = await user.update(req.body);
+
     res.status(200).json({
       success: true,
       message: "User updated successfully",
