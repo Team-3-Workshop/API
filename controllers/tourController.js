@@ -80,4 +80,41 @@ module.exports = {
       data: tours,
     });
   },
+  create: async (req, res) => {
+    const schema = {
+      destination: {
+        type: 'string',
+      },
+      description: {
+        type: 'string'
+      },
+      hotelId: {
+        type: 'uuid'
+      },
+      transportationId: {
+        type: 'uuid'
+      },
+      tourGuideId: {
+        type: 'uuid'
+      }
+    }
+
+    const validated = v.validate(req.body, schema)
+
+    if(validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null
+      })
+    }
+
+    const tour = await Tour.create(req.body)
+
+    res.status(201).json({
+      success: true,
+      message: "Tour has been submitted successfully",
+      data: tour
+    })
+  }
 };
