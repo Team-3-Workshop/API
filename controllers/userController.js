@@ -1,5 +1,5 @@
 const Validator = require("fastest-validator");
-const { User, sequelize, Sequelize, Transaction } = require("../db/models");
+const { User, sequelize, Tour, Sequelize, Transaction } = require("../db/models");
 const { QueryTypes, Op } = require("sequelize");
 
 const v = new Validator();
@@ -161,7 +161,15 @@ module.exports = {
       quantity: {
         type: 'number',
         integer: true
+      },
+      total: {
+        type: 'number',
+        integer: true
+      },
+      tourId: {
+        type: 'uuid'
       }
+
     }
 
     const validated = v.validate(req.body, schema);
@@ -179,10 +187,14 @@ module.exports = {
       userId: id
     });
 
+    const tour = await Tour.findByPk(req.body.tourId)
+    // console.log(tour)
+    const result = await transaction.addTour(tour, { through: { total: req.body.total } })
+
     res.status(201).json({
       success: true,
       message: "Transaction success",
-      data: transaction
+      data: result
     })
   },
   update: async (req, res) => {
