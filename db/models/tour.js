@@ -11,15 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Tour.belongsTo(models.Hotel, {
-        foreignKey: 'id'
-      });
-      Tour.belongsTo(models.Transportation, {
-        foreignKey: 'id'
-      });
-      Tour.belongsTo(models.TourGuide, {
-        foreignKey: 'id'
-      });
+      Tour.belongsTo(models.Hotel);
+      // models.Hotel.hasMany(Tour)
+      Tour.belongsTo(models.Transportation);
+      // models.Transportation.hasMany(Tour)
+      Tour.belongsTo(models.TourGuide);
+      // models.TourGuide.hasMany(Tour)
     }
   }
   Tour.init({
