@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
       // models.Transportation.hasMany(Tour)
       Tour.belongsTo(models.TourGuide);
       // models.TourGuide.hasMany(Tour)
+      Tour.belongsToMany(models.Transaction, {
+        through: 'DetailTransaction'
+      })
+      Tour.hasMany(models.DetailTransaction)
     }
   }
   Tour.init({

@@ -34,41 +34,44 @@ module.exports = {
       }
     });
 
-    await queryInterface.addConstraint('Tours', {
-      fields: ['hotelId'],
-      type: 'foreign key',
-      name: 'tour_hotel_association',
-      references: {
-        table: 'Hotels',
-        field: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    });
-    await queryInterface.addConstraint('Tours', {
-      fields: ['transportationId'],
-      type: 'foreign key',
-      name: 'tour_transportation_association',
-      references: {
-        table: 'Transportations',
-        field: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    });
-    await queryInterface.addConstraint('Tours', {
-      fields: ['tourGuideId'],
-      type: 'foreign key',
-      name: 'tour_tourGuide_association',
-      references: {
-        table: 'TourGuides',
-        field: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    });
+    // await queryInterface.addConstraint('Tours', {
+    //   fields: ['hotelId'],
+    //   type: 'foreign key',
+    //   name: 'tour_hotel_association',
+    //   references: {
+    //     table: 'Hotels',
+    //     field: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'SET NULL'
+    // });
+    // await queryInterface.addConstraint('Tours', {
+    //   fields: ['transportationId'],
+    //   type: 'foreign key',
+    //   name: 'tour_transportation_association',
+    //   references: {
+    //     table: 'Transportations',
+    //     field: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'SET NULL'
+    // });
+    // await queryInterface.addConstraint('Tours', {
+    //   fields: ['tourGuideId'],
+    //   type: 'foreign key',
+    //   name: 'tour_tourGuide_association',
+    //   references: {
+    //     table: 'TourGuides',
+    //     field: 'id'
+    //   },
+    //   onUpdate: 'CASCADE',
+    //   onDelete: 'SET NULL'
+    // });
   },
   async down(queryInterface, Sequelize) {
+    // await queryInterface.removeConstraint('Tours', 'tour_hotel_association');
+    // await queryInterface.removeConstraint('Tours', 'tour_transportation_association');
+    // await queryInterface.removeConstraint('Tours', 'tour_tourGuide_association');
     await queryInterface.dropTable('Tours');
   }
 };

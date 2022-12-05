@@ -11,31 +11,40 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      models.Transaction.hasOne(DetailTransaction);
-      DetailTransaction.belongsTo(models.Transaction, {
-        foreignKey: 'transactionId',
-        as: 'transaction'
-      });
+      // models.Transaction.hasOne(DetailTransaction);
+      // DetailTransaction.belongsTo(models.Transaction, {
+      //   foreignKey: 'transactionId',
+      //   as: 'transaction'
+      // });
+      // models.Transaction.hasMany(models.Tour, {
+      //   through: 'DetailTransaction'
+      // })
+
+      // models.Tour.BelongsToMany(models.Transaction, {
+      //   through: 'DetailTransaction'
+      // })
+      DetailTransaction.belongsTo(models.Transaction)
+      DetailTransaction.belongsTo(models.Tour)
     }
   }
   DetailTransaction.init({
-    id: {
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
+    transactionId: {
+      type: DataTypes.UUID
+    },
+    tourId: {
+      type: DataTypes.UUID
     },
     total: DataTypes.STRING,
-    transactionId: {
-      type: DataTypes.UUID,
-      references: {
-        model: 'Transaction',
-        key: 'id'
-      }
-    }
+    // transactionId: {
+    //   type: DataTypes.UUID,
+    //   references: {
+    //     model: 'Transaction',
+    //     key: 'id'
+    //   }
+    // }
   }, {
     sequelize,
-    modelName: 'detailTransaction',
+    modelName: 'DetailTransaction',
   });
   return DetailTransaction;
 };
