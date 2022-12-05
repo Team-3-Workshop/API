@@ -7,4 +7,9 @@ router.route('/')
     .get(tourController.get)
     .post(tourController.create)
 
+router.route('/:id')
+    .get(tourController.find)
+    .patch(tourController.update)
+    .delete(tourController.delete)
+
 module.exports = router

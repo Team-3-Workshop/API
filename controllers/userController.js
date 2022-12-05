@@ -116,44 +116,6 @@ module.exports = {
 
     return res.status(200).json(transactions);
   },
-  getTransaction: async (req, res) => {
-    // const id = req.params.id;
-    const trans = req.params.trans;
-
-    // const transaction = await Transaction.findAll({
-    //   where: {
-    //     [Op.and]: [{ id: trans }, { userId: id }],
-    //   },
-    // });
-
-    // const transaction = await sequelize.query(
-    //   "SELECT * FROM Transactions WHERE userId=:id AND id=:trans",
-    //   {
-    //     replacements: {
-    //       id: id,
-    //       trans: trans
-    //      },
-    //     type: QueryTypes.SELECT,
-    //   }
-    // )
-
-    // const transaction = await Transaction.findByPk(trans);
-    const transaction = await sequelize.query("SELECT * FROM `Transactions` WHERE `id`=" + trans);
-
-    if (!transaction) {
-      return res.status(404).json({
-        success: false,
-        message: "User Transaction not Found",
-        data: transaction,
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: true,
-      data: transaction,
-    });
-  },
   createTransaction: async (req, res) => {
     const id = req.params.id;
 

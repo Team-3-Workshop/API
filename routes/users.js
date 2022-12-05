@@ -14,7 +14,4 @@ router.route('/:id/transactions')
   .get(userController.getTransactions)
   .post(userController.createTransaction);
 
-// router.get('/:id/transactions/:trans', userController.getTransactions);
-  
-
 module.exports = router;

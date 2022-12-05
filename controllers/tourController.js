@@ -66,7 +66,7 @@ module.exports = {
         ]
     })
 
-    if (!tours) {
+    if (!tours.length) {
       return res.status(404).json({
         success: false,
         message: "Tour not Found",
@@ -79,6 +79,25 @@ module.exports = {
       message: "Tour Found",
       data: tours,
     });
+  },
+  find: async (req, res) => {
+    const id = req.params.id
+
+    const tour = await Tour.findByPk(id)
+
+    if(!tour) {
+      return res.status(404).json({
+        success: false,
+        message: "Tour not Found",
+        data: tour
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Tour Found",
+      data: tour
+    })
   },
   create: async (req, res) => {
     const schema = {
@@ -115,6 +134,73 @@ module.exports = {
       success: true,
       message: "Tour has been submitted successfully",
       data: tour
+    })
+  },
+  update: async (req, res) => {
+    const id = req.params.id
+
+    let tour = await Tour.findByPk(id)
+
+    const schema = {
+      destination: {
+        type: 'string',
+        optional: true
+      },
+      description: {
+        type: 'string',
+        optional: true
+      },
+      hotelId: {
+        type: 'uuid',
+        optional: true
+      },
+      transportationId: {
+        type: 'uuid',
+        optional: true
+      },
+      tourGuideId: {
+        type: 'uuid',
+        optional: true
+      }
+    }
+
+    const validated = v.validate(req.body, schema)
+
+    if(validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null
+      })
+    }
+
+    tour = await tour.update(req.body)
+
+    res.status(200).json({
+      success: true,
+      message: "Tour updated successfully",
+      data: tour,
+    });
+  },
+  delete: async (req, res) => {
+    const id = req.params.id
+
+    const tour = await Tour.findByPk(id)
+
+    if(!tour) {
+      return res.status(404).json({
+        success: false,
+        message: "Tour not Found",
+        data: tour
+      })
+    }
+
+    await tour.destroy()
+
+    res.status(200).json({
+      success: true,
+      message: "Tour deleted successfully",
+      data: null
     })
   }
 };
