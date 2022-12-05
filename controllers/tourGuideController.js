@@ -1,11 +1,12 @@
 const Validator = require("fastest-validator");
-const { TourGuide } = require("../db/models");
+const { TourGuide, Tour } = require("../db/models");
 
 const v = new Validator();
 
 module.exports = {
   get: async (req, res) => {
     const tourGuides = await TourGuide.findAll({
+      include: Tour,
       order: [["firstName", "ASC"]],
     });
 
@@ -26,7 +27,9 @@ module.exports = {
   find: async (req, res) => {
     const id = req.params.id;
 
-    const tourGuide = await TourGuide.findByPk(id);
+    const tourGuide = await TourGuide.findByPk(id, {
+      include: Tour
+    });
 
     if (!tourGuide) {
       return res.status(404).json({

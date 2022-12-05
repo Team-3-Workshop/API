@@ -3,7 +3,6 @@ const { Transaction, User } = require('../db/models')
 module.exports = {
     index: async (req, res) => {
         const transactions = await Transaction.findAll({
-            include: User,
             order: [['createdAt']]
         });
 

@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Tour.hasMany(models.Hotel, {
+      Tour.belongsTo(models.Hotel, {
         foreignKey: 'id'
       });
-      Tour.hasMany(models.Transportation, {
+      Tour.belongsTo(models.Transportation, {
         foreignKey: 'id'
       });
-      Tour.hasMany(models.TourGuide, {
+      Tour.belongsTo(models.TourGuide, {
         foreignKey: 'id'
       });
     }
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     destination: DataTypes.STRING,
     description: DataTypes.TEXT,
     hotelId: DataTypes.UUID,
-    transporationId: DataTypes.UUID,
+    transportationId: DataTypes.UUID,
     tourGuideId: DataTypes.UUID,
   }, {
     sequelize,

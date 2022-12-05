@@ -1,5 +1,5 @@
 const Validator = require("fastest-validator");
-const { Hotel, sequelize } = require("../db/models");
+const { Hotel, Tour, sequelize } = require("../db/models");
 const { QueryTypes } = require("sequelize");
 
 const v = new Validator();
@@ -7,6 +7,7 @@ const v = new Validator();
 module.exports = {
   get: async (req, res) => {
     const hotels = await Hotel.findAll({
+      include: Tour,
       order: [["name", "ASC"]],
     });
 
@@ -27,7 +28,9 @@ module.exports = {
   find: async (req, res) => {
     const id = req.params.id;
 
-    const hotel = await Hotel.findByPk(id);
+    const hotel = await Hotel.findByPk(id, {
+      include: Tour
+    });
 
     if (!hotel) {
       return res.status(404).json({

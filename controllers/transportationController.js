@@ -1,5 +1,5 @@
 const Validator = require("fastest-validator");
-const { Transportation, sequelize } = require("../db/models");
+const { Transportation, Tour, sequelize } = require("../db/models");
 // const Transportation = require('../db/models/transportation')
 
 const v = new Validator();
@@ -7,6 +7,7 @@ const v = new Validator();
 module.exports = {
   get: async (req, res) => {
     const transportations = await Transportation.findAll({
+      include: Tour,
       order: [["name", "ASC"]],
     });
 
@@ -27,7 +28,9 @@ module.exports = {
   find: async (req, res) => {
     const id = req.params.id;
 
-    const transportation = await Transportation.findByPk(id);
+    const transportation = await Transportation.findByPk(id, {
+      include: Tour
+    });
 
     if (!transportation) {
       return res.status(404).json({
