@@ -45,7 +45,7 @@ module.exports = {
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Transactions Found",
       data: transactions,
@@ -82,14 +82,14 @@ module.exports = {
     if (!transaction) {
       return res.status(404).json({
         success: false,
-        message: "Tour not Found",
+        message: "Transaction not Found",
         data: transaction,
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Tour Found",
+      message: "Transaction Found",
       data: transaction,
     });
 

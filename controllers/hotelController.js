@@ -37,14 +37,14 @@ module.exports = {
     if (!hotels.length) {
       return res.status(404).json({
         success: false,
-        message: "Users not Found",
+        message: "Hotels not Found",
         data: hotels,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Users Found",
+      message: "Hotels Found",
       data: hotels,
     });
 

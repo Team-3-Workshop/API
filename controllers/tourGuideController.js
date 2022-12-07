@@ -53,14 +53,14 @@ module.exports = {
     if (!tourGuides.length) {
       return res.status(404).json({
         success: false,
-        message: "Transportations not Found",
+        message: "Tour Guides not Found",
         data: tourGuides,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Transportations Found",
+      message: "Tour Guides Found",
       data: tourGuides,
     });
 
@@ -76,6 +76,7 @@ module.exports = {
     if (!tourGuide) {
       return res.status(404).json({
         success: false,
+        message: "Tour Guide not Found",
         data: tourGuide,
       });
     }

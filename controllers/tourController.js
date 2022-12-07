@@ -53,14 +53,14 @@ module.exports = {
     if (!tours.length) {
       return res.status(404).json({
         success: false,
-        message: "Tour not Found",
+        message: "Tours not Found",
         data: tours,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Tour Found",
+      message: "Tours Found",
       data: tours,
     });
 

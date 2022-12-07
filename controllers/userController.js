@@ -1,12 +1,5 @@
 const Validator = require("fastest-validator");
-const {
-  User,
-  sequelize,
-  Tour,
-  Sequelize,
-  Transaction,
-} = require("../db/models");
-const { QueryTypes, Op } = require("sequelize");
+const { User, Tour, Sequelize, Transaction } = require("../db/models");
 
 const v = new Validator();
 
@@ -101,17 +94,19 @@ module.exports = {
       include: Transaction,
     });
 
-    return res.json(
-      {
+    if (!user) {
+      return res.status(404).json({
         success: true,
         message: "User Found",
         data: user,
-      } || {
-        success: false,
-        message: "User not found!",
-        data: user,
-      }
-    );
+      });
+    }
+
+    res.status(200).json({
+      success: false,
+      message: "User Found",
+      data: user,
+    });
 
     next();
   },
@@ -124,7 +119,14 @@ module.exports = {
       },
     });
 
-    return res.status(200).json({
+    if(!transactions) {
+      return res.status(404).json({
+        success: false,
+        message: "Transactions not Found"
+      })
+    }
+
+    res.status(200).json({
       success: true,
       message: "Transactions Found",
       data: transactions,
@@ -161,7 +163,7 @@ module.exports = {
     });
 
     const tour = await Tour.findByPk(req.body.tourId);
-    // console.log(tour)
+    
     const result = await transaction.addTour(tour, {
       through: "DetailTransactions",
     });
