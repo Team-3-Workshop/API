@@ -1,35 +1,65 @@
 const Validator = require("fastest-validator");
-const { Transportation, Tour, sequelize } = require("../db/models");
+const { Transportation, Tour, Sequelize } = require("../db/models");
 // const Transportation = require('../db/models/transportation')
 
 const v = new Validator();
 
 module.exports = {
-  get: async (req, res) => {
-    const transportations = await Transportation.findAll({
-      include: Tour,
-      order: [["name", "ASC"]],
-    });
+  get: async (req, res, next) => {
+    const where = {};
 
-    if (!transportations) {
-      return res.status(404).json({
+    const schema = {
+      name: {
+        type: "string",
+        optional: true,
+      },
+      capacity: {
+        type: 'string',
+        optional: true
+      }
+    };
+
+    const validated = v.validate(req.query, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
         success: false,
-        message: "Transportations not Found",
-        data: transportations,
+        message: validated[0].message,
+        data: null,
       });
     }
 
-    return res.status(200).json({
+    const { name, capacity } = req.query;
+
+    if (name) where.name = { [Sequelize.Op.like]: `%${name}%` };
+    if (capacity) where.capacity = { [Sequelize.Op.like]: `%${capacity}%` };
+
+    const transpotations = await Transportation.findAll({
+      where,
+      order: [["name", "ASC"]],
+    });
+
+    if (!transpotations.length) {
+      return res.status(404).json({
+        success: false,
+        message: "Transportations not Found",
+        data: transpotations,
+      });
+    }
+
+    res.status(200).json({
       success: true,
       message: "Transportations Found",
-      data: transportations,
+      data: transpotations,
     });
+
+    next();
   },
-  find: async (req, res) => {
+  find: async (req, res, next) => {
     const id = req.params.id;
 
     const transportation = await Transportation.findByPk(id, {
-      include: Tour
+      include: Tour,
     });
 
     if (!transportation) {
@@ -45,18 +75,20 @@ module.exports = {
       message: "Transportation Found",
       data: transportation,
     });
+
+    next();
   },
-  create: async (req, res) => {
+  create: async (req, res, next) => {
     const schema = {
       name: {
         type: "string",
       },
       capacity: {
-        type: "number"
+        type: "number",
       },
       description: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
 
     const validated = v.validate(req.body, schema);
@@ -76,8 +108,10 @@ module.exports = {
       message: "Transportation has been Submitted successfully",
       data: transportation,
     });
+
+    next();
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     const id = req.params.id;
 
     let transportation = await Transportation.findByPk(id);
@@ -93,15 +127,15 @@ module.exports = {
     const schema = {
       name: {
         type: "string",
-        optional: true
+        optional: true,
       },
       capacity: {
         type: "number",
-        optional: true
+        optional: true,
       },
       description: {
         type: "string",
-        optional: true
+        optional: true,
       },
     };
 
@@ -122,26 +156,30 @@ module.exports = {
       message: "Transportation updated successfully",
       data: transportation,
     });
+
+    next();
   },
-  delete: async (req, res) => {
-    const id = req.params.id
+  delete: async (req, res, next) => {
+    const id = req.params.id;
 
-    const transportation = await Transportation.findByPk(id)
+    const transportation = await Transportation.findByPk(id);
 
-    if(!transportation) {
+    if (!transportation) {
       return res.status(404).json({
         success: false,
         message: "Transportation not Found",
-        data: transportation
-      })
+        data: transportation,
+      });
     }
-    
-    await transportation.destroy()
+
+    await transportation.destroy();
 
     res.status(200).json({
       success: true,
       message: "Transportation deleted successfully",
-      data: null
-    })
+      data: null,
+    });
+
+    next();
   },
 };

@@ -5,7 +5,7 @@ const Validator = require("fastest-validator");
 const v = new Validator();
 
 module.exports = {
-  login: async (req, res) => {
+  login: async (req, res, next) => {
     const schema = {
       email: "email",
       password: {
@@ -48,13 +48,15 @@ module.exports = {
     }
 
     res.status(200).json({
-        success: true,
-        message: "Login Success",
-        data: user
-    })
+      success: true,
+      message: "Login Success",
+      data: user,
+    });
+
+    next();
   },
 
-  signup: async (req, res) => {
+  signup: async (req, res, next) => {
     const schema = {
       firstName: {
         type: "string",
@@ -69,36 +71,36 @@ module.exports = {
       },
       citizen: {
         type: "enum",
-        values: ["WNI", 'WNA']
+        values: ["WNI", "WNA"],
       },
       nik: {
-        type:"string",
+        type: "string",
         length: 16,
-        numeric: true
+        numeric: true,
       },
-      address : {
+      address: {
         type: "string",
       },
       date: {
-        type: "string"
+        type: "string",
       },
       phone: {
         type: "string",
-        numeric: true
+        numeric: true,
       },
       email: {
         type: "email",
-        unique: true
+        unique: true,
       },
       password: {
         type: "string",
         min: 8,
-        singleLine: true
+        singleLine: true,
       },
       role: {
         type: "enum",
-        values: ["user", "admin"]
-      }
+        values: ["user", "admin"],
+      },
     };
 
     const validated = v.validate(req.body, schema);
@@ -118,5 +120,7 @@ module.exports = {
       message: "User has been Signed up successfully!",
       data: user,
     });
-  }
+
+    next();
+  },
 };

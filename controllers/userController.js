@@ -1,11 +1,17 @@
 const Validator = require("fastest-validator");
-const { User, sequelize, Tour, Sequelize, Transaction } = require("../db/models");
+const {
+  User,
+  sequelize,
+  Tour,
+  Sequelize,
+  Transaction,
+} = require("../db/models");
 const { QueryTypes, Op } = require("sequelize");
 
 const v = new Validator();
 
 module.exports = {
-  get: async (req, res) => {
+  get: async (req, res, next) => {
     const where = {};
 
     const schema = {
@@ -80,13 +86,15 @@ module.exports = {
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Users Found",
       data: users,
     });
+
+    next();
   },
-  find: async (req, res) => {
+  find: async (req, res, next) => {
     const id = req.params.id;
 
     const user = await User.findByPk(id, {
@@ -104,8 +112,10 @@ module.exports = {
         data: user,
       }
     );
+
+    next();
   },
-  getTransactions: async (req, res) => {
+  getTransactions: async (req, res, next) => {
     const id = req.params.id;
 
     const transactions = await Transaction.findAll({
@@ -114,21 +124,26 @@ module.exports = {
       },
     });
 
-    return res.status(200).json(transactions);
+    return res.status(200).json({
+      success: true,
+      message: "Transactions Found",
+      data: transactions,
+    });
+
+    next();
   },
-  createTransaction: async (req, res) => {
+  createTransaction: async (req, res, next) => {
     const id = req.params.id;
 
     const schema = {
       date: {
-        type: 'string',
-        integer: true
+        type: "string",
+        integer: true,
       },
       tourId: {
-        type: 'uuid'
-      }
-
-    }
+        type: "uuid",
+      },
+    };
 
     const validated = v.validate(req.body, schema);
 
@@ -142,20 +157,24 @@ module.exports = {
 
     const transaction = await Transaction.create({
       date: req.body.date,
-      userId: id
+      userId: id,
     });
 
-    const tour = await Tour.findByPk(req.body.tourId)
+    const tour = await Tour.findByPk(req.body.tourId);
     // console.log(tour)
-    const result = await transaction.addTour(tour, { through: 'DetailTransactions' })
+    const result = await transaction.addTour(tour, {
+      through: "DetailTransactions",
+    });
 
     res.status(201).json({
       success: true,
       message: "Transaction success",
-      data: result
-    })
+      data: result,
+    });
+
+    next();
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     const id = req.params.id;
 
     let user = await User.findByPk(id);
@@ -241,8 +260,10 @@ module.exports = {
       message: "User updated successfully",
       data: user,
     });
+
+    next();
   },
-  delete: async (req, res) => {
+  delete: async (req, res, next) => {
     const id = req.params.id;
 
     const user = await User.findByPk(id);
@@ -262,5 +283,7 @@ module.exports = {
       message: "User deleted successfully",
       data: null,
     });
+
+    next();
   },
 };

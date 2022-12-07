@@ -10,7 +10,7 @@ const {
 const v = new Validator();
 
 module.exports = {
-  get: async (req, res) => {
+  get: async (req, res, next) => {
     const where = {};
 
     const schema = {
@@ -35,36 +35,20 @@ module.exports = {
     if (destination)
       where.destination = { [Sequelize.Op.like]: `%${destination}%` };
 
-    // const tours = await Tour.findAll({
-    //   where,
-    //   include: [
-    //     {
-    //       model: Hotel,
-    //     },
-    //     {
-    //       model: Transportation,
-    //     },
-    //     {
-    //       model: TourGuide,
-    //     },
-    //   ],
-    //   order: [["destination", "ASC"]],
-    // });
-
     const tours = await Tour.findAll({
-        where,
-        include: [
-          {
-            model: Hotel
-          },
-          {
-            model: Transportation
-          },
-          {
-            model: TourGuide
-          }
-        ]
-    })
+      where,
+      include: [
+        {
+          model: Hotel,
+        },
+        {
+          model: Transportation,
+        },
+        {
+          model: TourGuide,
+        },
+      ],
+    });
 
     if (!tours.length) {
       return res.status(404).json({
@@ -79,143 +63,153 @@ module.exports = {
       message: "Tour Found",
       data: tours,
     });
+
+    next();
   },
-  find: async (req, res) => {
-    const id = req.params.id
+  find: async (req, res, next) => {
+    const id = req.params.id;
 
-    const tour = await Tour.findByPk(id)
+    const tour = await Tour.findByPk(id);
 
-    if(!tour) {
+    if (!tour) {
       return res.status(404).json({
         success: false,
         message: "Tour not Found",
-        data: tour
-      })
+        data: tour,
+      });
     }
 
     res.status(200).json({
       success: true,
       message: "Tour Found",
-      data: tour
-    })
+      data: tour,
+    });
+
+    next();
   },
-  create: async (req, res) => {
+  create: async (req, res, next) => {
     const schema = {
       destination: {
-        type: 'string',
+        type: "string",
       },
       description: {
-        type: 'string'
+        type: "string",
       },
       hotelId: {
-        type: 'uuid'
+        type: "uuid",
       },
       transportationId: {
-        type: 'uuid'
+        type: "uuid",
       },
       tourGuideId: {
-        type: 'uuid'
+        type: "uuid",
       },
       price: {
-        type: 'number'
-      }
-    }
+        type: "number",
+      },
+    };
 
-    const validated = v.validate(req.body, schema)
+    const validated = v.validate(req.body, schema);
 
-    if(validated.length) {
+    if (validated.length) {
       return res.status(400).json({
         success: false,
         message: validated[0].message,
-        data: null
-      })
+        data: null,
+      });
     }
 
-    const tour = await Tour.create(req.body)
+    const tour = await Tour.create(req.body);
 
     res.status(201).json({
       success: true,
       message: "Tour has been submitted successfully",
-      data: tour
-    })
+      data: tour,
+    });
+
+    next();
   },
-  update: async (req, res) => {
-    const id = req.params.id
+  update: async (req, res, next) => {
+    const id = req.params.id;
 
-    let tour = await Tour.findByPk(id)
+    let tour = await Tour.findByPk(id);
 
-    if(!tour) {
+    if (!tour) {
       return res.status(404).json({
         success: false,
         message: "Tour not Found",
-        data: tour
-      })
+        data: tour,
+      });
     }
 
     const schema = {
       destination: {
-        type: 'string',
-        optional: true
+        type: "string",
+        optional: true,
       },
       description: {
-        type: 'string',
-        optional: true
+        type: "string",
+        optional: true,
       },
       hotelId: {
-        type: 'uuid',
-        optional: true
+        type: "uuid",
+        optional: true,
       },
       transportationId: {
-        type: 'uuid',
-        optional: true
+        type: "uuid",
+        optional: true,
       },
       tourGuideId: {
-        type: 'uuid',
-        optional: true
+        type: "uuid",
+        optional: true,
       },
       price: {
-        type: 'number',
-        optional: true
-      }
-    }
+        type: "number",
+        optional: true,
+      },
+    };
 
-    const validated = v.validate(req.body, schema)
+    const validated = v.validate(req.body, schema);
 
-    if(validated.length) {
+    if (validated.length) {
       return res.status(400).json({
         success: false,
         message: validated[0].message,
-        data: null
-      })
+        data: null,
+      });
     }
 
-    tour = await tour.update(req.body)
+    tour = await tour.update(req.body);
 
     res.status(200).json({
       success: true,
       message: "Tour updated successfully",
       data: tour,
     });
+
+    next();
   },
-  delete: async (req, res) => {
-    const id = req.params.id
+  delete: async (req, res, next) => {
+    const id = req.params.id;
 
-    const tour = await Tour.findByPk(id)
+    const tour = await Tour.findByPk(id);
 
-    if(!tour) {
+    if (!tour) {
       return res.status(404).json({
         success: false,
         message: "Tour not Found",
-        data: tour
-      })
+        data: tour,
+      });
     }
 
-    await tour.destroy()
+    await tour.destroy();
 
     res.status(200).json({
       success: true,
       message: "Tour deleted successfully",
-      data: null
-    })
-  }
+      data: null,
+    });
+
+    next();
+  },
 };

@@ -1,35 +1,60 @@
 const Validator = require("fastest-validator");
-const { Hotel, Tour, sequelize } = require("../db/models");
+const { Hotel, Tour, Sequelize } = require("../db/models");
 const { QueryTypes } = require("sequelize");
 
 const v = new Validator();
 
 module.exports = {
-  get: async (req, res) => {
+  get: async (req, res, next) => {
+    const where = {};
+
+    const schema = {
+      name: {
+        type: "string",
+        optional: true,
+      },
+    };
+
+    const validated = v.validate(req.query, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    const name = req.query.name;
+
+    if (name) where.name = { [Sequelize.Op.like]: `%${name}%` };
+
     const hotels = await Hotel.findAll({
-      include: Tour,
+      where,
       order: [["name", "ASC"]],
     });
 
-    if (!hotels) {
+    if (!hotels.length) {
       return res.status(404).json({
         success: false,
-        message: "Hotel not Found",
+        message: "Users not Found",
         data: hotels,
       });
     }
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: "Hotels Found",
+      message: "Users Found",
       data: hotels,
     });
+
+    next();
   },
-  find: async (req, res) => {
+  find: async (req, res, next) => {
     const id = req.params.id;
 
     const hotel = await Hotel.findByPk(id, {
-      include: Tour
+      include: Tour,
     });
 
     if (!hotel) {
@@ -45,15 +70,17 @@ module.exports = {
       message: "Hotel Found",
       data: hotel,
     });
+
+    next();
   },
-  create: async (req, res) => {
+  create: async (req, res, next) => {
     const schema = {
       name: {
         type: "string",
       },
       description: {
-        type: "string"
-      }
+        type: "string",
+      },
     };
 
     const validated = v.validate(req.body, schema);
@@ -73,8 +100,10 @@ module.exports = {
       message: "Hotel has been Submited successfully!",
       data: hotel,
     });
+
+    next();
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     const id = req.params.id;
 
     let hotel = await Hotel.findByPk(id);
@@ -90,11 +119,11 @@ module.exports = {
     const schema = {
       name: {
         type: "string",
-        optional: true
+        optional: true,
       },
       description: {
         type: "string",
-        optional: true
+        optional: true,
       },
     };
 
@@ -115,17 +144,19 @@ module.exports = {
       message: "Hotel updated successfully",
       data: hotel,
     });
+
+    next();
   },
-  delete: async (req, res) => {
+  delete: async (req, res, next) => {
     const id = req.params.id;
 
     const hotel = await Hotel.findByPk(id);
 
-    if(!hotel) {
+    if (!hotel) {
       return res.status(404).json({
         success: false,
         message: "Hotel not Found",
-        data: hotel
+        data: hotel,
       });
     }
 
@@ -134,7 +165,9 @@ module.exports = {
     res.status(200).json({
       success: true,
       message: "Hotel deleted successfully",
-      data: null
+      data: null,
     });
-  }
+
+    next();
+  },
 };

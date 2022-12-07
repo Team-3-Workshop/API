@@ -13,7 +13,7 @@ const Validator = require("fastest-validator");
 const v = new Validator();
 
 module.exports = {
-  index: async (req, res) => {
+  index: async (req, res, next) => {
     const transactions = await Transaction.findAll({
       include: [
         {
@@ -50,8 +50,10 @@ module.exports = {
       message: "Transactions Found",
       data: transactions,
     });
+
+    next();
   },
-  find: async (req, res) => {
+  find: async (req, res, next) => {
     const id = req.params.id;
 
     const transaction = await Transaction.findByPk(id, {
@@ -85,9 +87,15 @@ module.exports = {
       });
     }
 
-    return res.json(transaction);
+    return res.status(200).json({
+      success: true,
+      message: "Tour Found",
+      data: transaction,
+    });
+
+    next();
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     const id = req.params.id;
 
     let transaction = await Transaction.findByPk(id);
@@ -140,8 +148,10 @@ module.exports = {
       message: "Transaction updated successfully",
       data: newTransaction,
     });
+
+    next();
   },
-  delete: async (req, res) => {
+  delete: async (req, res, next) => {
     const id = req.params.id;
 
     const transaction = await Transaction.findByPk(id);
@@ -164,5 +174,7 @@ module.exports = {
       message: "Transaction deleted successfully",
       data: null,
     });
+
+    next();
   },
 };

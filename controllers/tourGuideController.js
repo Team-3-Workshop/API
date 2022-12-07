@@ -1,34 +1,76 @@
 const Validator = require("fastest-validator");
-const { TourGuide, Tour } = require("../db/models");
+const { TourGuide, Tour, Sequelize } = require("../db/models");
 
 const v = new Validator();
 
 module.exports = {
-  get: async (req, res) => {
+  get: async (req, res, next) => {
+    const where = {};
+
+    const schema = {
+      firstName: {
+        type: "string",
+        alpha: true,
+        optional: true,
+      },
+      lastName: {
+        type: "string",
+        alpha: true,
+        optional: true,
+      },
+      fullName: {
+        type: "string",
+        optional: true,
+      },
+      address: {
+        type: "string",
+        optional: true,
+      },
+    };
+
+    const validated = v.validate(req.query, schema);
+
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    const { firstName, lastName, fullName, address } = req.query;
+
+    if (firstName) where.firstName = { [Sequelize.Op.like]: `%${firstName}%` };
+    if (lastName) where.lastName = { [Sequelize.Op.like]: `%${lastName}%` };
+    if (fullName) where.fullName = { [Sequelize.Op.like]: `%${fullName}%` };
+    if (address) where.address = { [Sequelize.Op.like]: `%${address}%` };
+
     const tourGuides = await TourGuide.findAll({
-      include: Tour,
+      where,
       order: [["firstName", "ASC"]],
     });
 
-    if (!tourGuides) {
+    if (!tourGuides.length) {
       return res.status(404).json({
-        succcess: false,
-        message: "Tour Guides not Found",
+        success: false,
+        message: "Transportations not Found",
         data: tourGuides,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Tour Guides Found",
+      message: "Transportations Found",
       data: tourGuides,
     });
+
+    next();
   },
-  find: async (req, res) => {
+  find: async (req, res, next) => {
     const id = req.params.id;
 
     const tourGuide = await TourGuide.findByPk(id, {
-      include: Tour
+      include: Tour,
     });
 
     if (!tourGuide) {
@@ -43,8 +85,10 @@ module.exports = {
       message: "Tour Guide Found",
       data: tourGuide,
     });
+
+    next();
   },
-  create: async (req, res) => {
+  create: async (req, res, next) => {
     const schema = {
       firstName: {
         type: "string",
@@ -62,11 +106,11 @@ module.exports = {
       },
       phone: {
         type: "string",
-        numeric: true
+        numeric: true,
       },
       email: {
-        type: "email"
-      }
+        type: "email",
+      },
     };
 
     const validated = v.validate(req.body, schema);
@@ -86,8 +130,10 @@ module.exports = {
       message: "Tour Guide has been Submitted successfully",
       data: tourGuide,
     });
+
+    next();
   },
-  update: async (req, res) => {
+  update: async (req, res, next) => {
     const id = req.params.id;
 
     let tourGuide = await TourGuide.findByPk(id);
@@ -117,17 +163,17 @@ module.exports = {
       },
       address: {
         type: "string",
-        optional: true
+        optional: true,
       },
       phone: {
         type: "string",
         numeric: true,
-        optional: true
+        optional: true,
       },
       email: {
         type: "email",
-        optional: true
-      }
+        optional: true,
+      },
     };
 
     const validated = v.validate(req.body, schema);
@@ -147,8 +193,10 @@ module.exports = {
       message: "Tour Guide updated successfully",
       data: tourGuide,
     });
+
+    next();
   },
-  delete: async (req, res) => {
+  delete: async (req, res, next) => {
     const id = req.params.id;
 
     const tourGuide = await TourGuide.findByPk(id);
@@ -168,5 +216,7 @@ module.exports = {
       message: "Tour Guide deleted successfully",
       data: null,
     });
+
+    next();
   },
 };
