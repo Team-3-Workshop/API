@@ -4,6 +4,9 @@ const router = Router();
 const transactionController = require("../controllers/transactionController");
 
 router.get("/", transactionController.index);
-router.get("/:id", transactionController.show);
+router.route("/:id")
+    .get(transactionController.find)
+    .patch(transactionController.update)
+    .delete(transactionController.delete)
 
 module.exports = router;

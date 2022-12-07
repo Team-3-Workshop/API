@@ -20,7 +20,7 @@ module.exports = {
         field: "id",
       },
       onUpdate: "CASCADE",
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
     });
 
     // DetailTransactions
@@ -33,7 +33,7 @@ module.exports = {
         field: "id",
       },
       onUpdate: "CASCADE",
-      onDelete: "SET NULL",
+      onDelete: "CASCADE",
     });
 
     await queryInterface.addConstraint("DetailTransactions", {

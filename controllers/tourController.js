@@ -141,6 +141,14 @@ module.exports = {
 
     let tour = await Tour.findByPk(id)
 
+    if(!tour) {
+      return res.status(404).json({
+        success: false,
+        message: "Tour not Found",
+        data: tour
+      })
+    }
+
     const schema = {
       destination: {
         type: 'string',
