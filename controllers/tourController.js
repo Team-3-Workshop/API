@@ -115,6 +115,9 @@ module.exports = {
       },
       tourGuideId: {
         type: 'uuid'
+      },
+      price: {
+        type: 'number'
       }
     }
 
@@ -168,6 +171,10 @@ module.exports = {
       },
       tourGuideId: {
         type: 'uuid',
+        optional: true
+      },
+      price: {
+        type: 'number',
         optional: true
       }
     }

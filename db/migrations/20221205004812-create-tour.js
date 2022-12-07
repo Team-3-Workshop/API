@@ -24,6 +24,9 @@ module.exports = {
       tourGuideId: {
         type: Sequelize.UUID
       },
+      price: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -51,6 +51,12 @@ module.exports = {
       name: {
         type: "string",
       },
+      capacity: {
+        type: "number"
+      },
+      description: {
+        type: "string"
+      }
     };
 
     const validated = v.validate(req.body, schema);
@@ -86,6 +92,14 @@ module.exports = {
 
     const schema = {
       name: {
+        type: "string",
+        optional: true
+      },
+      capacity: {
+        type: "number",
+        optional: true
+      },
+      description: {
         type: "string",
         optional: true
       },

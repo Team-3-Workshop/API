@@ -18,18 +18,21 @@ module.exports = {
       {
         id: uuidv4(),
         name: "Hotel California",
+        description: "2 kamar dengan Bed King Size",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: uuidv4(),
         name: "Hotel Sanjaya",
+        description: "5 kamar dengan masing-masing single bed",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: uuidv4(),
         name: "Hotel POP",
+        description: "1 Kamar single bed King Size, balkon, dan kolam renang outdoor. Cocok untuk pasangan yang sedang bulan madu",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

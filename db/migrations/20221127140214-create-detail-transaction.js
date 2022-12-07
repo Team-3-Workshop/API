@@ -9,9 +9,6 @@ module.exports = {
       tourId: {
         type: Sequelize.UUID
       },
-      total: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

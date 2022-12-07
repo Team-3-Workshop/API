@@ -101,14 +101,8 @@ module.exports = {
     }
 
     const schema = {
-      quantity: {
-        type: "number",
-        integer: true,
-        optional: true,
-      },
-      total: {
-        type: "number",
-        integer: true,
+      date: {
+        type: "string",
         optional: true,
       },
       tourId: {
@@ -130,11 +124,10 @@ module.exports = {
     let detailTransaction = await DetailTransaction.findByPk(id);
 
     transaction = await transaction.update({
-      quantity: req.body.quantity,
+      date: req.body.date,
     });
 
     detailTransaction = await detailTransaction.update({
-      total: req.body.total,
       tourId: req.body.tourId,
     });
 

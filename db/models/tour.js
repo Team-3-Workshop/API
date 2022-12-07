@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     hotelId: DataTypes.UUID,
     transportationId: DataTypes.UUID,
     tourGuideId: DataTypes.UUID,
+    price: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Tour',

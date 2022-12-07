@@ -120,12 +120,8 @@ module.exports = {
     const id = req.params.id;
 
     const schema = {
-      quantity: {
-        type: 'number',
-        integer: true
-      },
-      total: {
-        type: 'number',
+      date: {
+        type: 'string',
         integer: true
       },
       tourId: {
@@ -145,13 +141,13 @@ module.exports = {
     }
 
     const transaction = await Transaction.create({
-      quantity: req.body.quantity,
+      date: req.body.date,
       userId: id
     });
 
     const tour = await Tour.findByPk(req.body.tourId)
     // console.log(tour)
-    const result = await transaction.addTour(tour, { through: { total: req.body.total } })
+    const result = await transaction.addTour(tour, { through: 'DetailTransactions' })
 
     res.status(201).json({
       success: true,

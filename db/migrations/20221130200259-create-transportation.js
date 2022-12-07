@@ -12,6 +12,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      capacity: {
+        type: Sequelize.INTEGER
+      },
+      description: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

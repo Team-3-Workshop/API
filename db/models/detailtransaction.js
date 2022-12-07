@@ -34,14 +34,6 @@ module.exports = (sequelize, DataTypes) => {
     tourId: {
       type: DataTypes.UUID
     },
-    total: DataTypes.STRING,
-    // transactionId: {
-    //   type: DataTypes.UUID,
-    //   references: {
-    //     model: 'Transaction',
-    //     key: 'id'
-    //   }
-    // }
   }, {
     sequelize,
     modelName: 'DetailTransaction',
