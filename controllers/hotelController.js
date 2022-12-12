@@ -77,13 +77,22 @@ module.exports = {
     const schema = {
       name: {
         type: "string",
+        empty: false
+      },
+      adrress: {
+        type: "string",
+        empty: false,
+        optional: true,
       },
       description: {
         type: "string",
+        empty: false
       },
     };
 
+    
     const validated = v.validate(req.body, schema);
+    console.log(validated)
 
     if (validated.length) {
       return res.status(400).json({
@@ -119,10 +128,17 @@ module.exports = {
     const schema = {
       name: {
         type: "string",
+        empty: false,
+        optional: true,
+      },
+      adrress: {
+        type: "string",
+        empty: false,
         optional: true,
       },
       description: {
         type: "string",
+        empty: false,
         optional: true,
       },
     };
