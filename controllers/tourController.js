@@ -69,7 +69,19 @@ module.exports = {
   find: async (req, res, next) => {
     const id = req.params.id;
 
-    const tour = await Tour.findByPk(id);
+    const tour = await Tour.findByPk(id, {
+      include: [
+        {
+          model: Hotel
+        },
+        {
+          model: Transportation
+        },
+        {
+          model: TourGuide
+        }
+      ]
+    });
 
     if (!tour) {
       return res.status(404).json({

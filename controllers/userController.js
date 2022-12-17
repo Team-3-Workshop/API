@@ -119,11 +119,11 @@ module.exports = {
       },
     });
 
-    if(!transactions) {
+    if (!transactions) {
       return res.status(404).json({
         success: false,
-        message: "Transactions not Found"
-      })
+        message: "Transactions not Found",
+      });
     }
 
     res.status(200).json({
@@ -163,7 +163,7 @@ module.exports = {
     });
 
     const tour = await Tour.findByPk(req.body.tourId);
-    
+
     const result = await transaction.addTour(tour, {
       through: "DetailTransactions",
     });
