@@ -140,7 +140,6 @@ module.exports = {
     const schema = {
       date: {
         type: "string",
-        integer: true,
       },
       tourId: {
         type: "uuid",
@@ -168,10 +167,12 @@ module.exports = {
       through: "DetailTransactions",
     });
 
+    const current = await Transaction.findByPk(transaction.id);
+
     res.status(201).json({
       success: true,
       message: "Transaction success",
-      data: result,
+      data: current,
     });
 
     next();

@@ -21,17 +21,6 @@ module.exports = {
         },
         {
           model: Tour,
-          include: [
-            {
-              model: Hotel,
-            },
-            {
-              model: Transportation,
-            },
-            {
-              model: TourGuide,
-            },
-          ],
         },
       ],
       order: [["createdAt"]],

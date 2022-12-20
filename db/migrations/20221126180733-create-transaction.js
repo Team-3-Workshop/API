@@ -10,7 +10,7 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
       },
       date: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.DATEONLY,
       },
       userId: {
         type: Sequelize.UUID,
