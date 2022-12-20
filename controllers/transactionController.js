@@ -23,7 +23,7 @@ module.exports = {
           model: Tour,
         },
       ],
-      order: [["createdAt"]],
+      order: [["updatedAt"]],
     });
 
     if (!transactions.length) {

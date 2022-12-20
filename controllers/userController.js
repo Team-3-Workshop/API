@@ -67,7 +67,6 @@ module.exports = {
 
     const users = await User.findAll({
       where,
-      include: Transaction,
       order: [["firstName", "ASC"]],
     });
 
@@ -91,7 +90,12 @@ module.exports = {
     const id = req.params.id;
 
     const user = await User.findByPk(id, {
-      include: Transaction,
+      include: [
+        {
+          model: Transaction,
+          include: Tour,
+        },
+      ],
     });
 
     if (!user) {
