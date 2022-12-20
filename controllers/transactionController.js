@@ -15,6 +15,7 @@ const v = new Validator();
 module.exports = {
   index: async (req, res, next) => {
     const transactions = await Transaction.findAll({
+      order: [["updatedAt", "DESC"]],
       include: [
         {
           model: User,
@@ -23,7 +24,6 @@ module.exports = {
           model: Tour,
         },
       ],
-      order: [["updatedAt"]],
     });
 
     if (!transactions.length) {
