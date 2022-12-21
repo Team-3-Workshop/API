@@ -61,13 +61,16 @@ module.exports = {
       firstName: {
         type: "string",
         alpha: true,
+        empty: false
       },
       lastName: {
         type: "string",
         alpha: true,
+        empty: false
       },
       fullName: {
         type: "string",
+        empty: false
       },
       citizen: {
         type: "enum",
@@ -77,25 +80,31 @@ module.exports = {
         type: "string",
         length: 16,
         numeric: true,
+        empty: false
       },
       address: {
         type: "string",
+        empty: false
       },
       date: {
         type: "string",
+        empty: false
       },
       phone: {
         type: "string",
         numeric: true,
+        empty: false
       },
       email: {
         type: "email",
         unique: true,
+        empty: false
       },
       password: {
         type: "string",
         min: 8,
         singleLine: true,
+        empty: false
       },
       role: {
         type: "enum",
