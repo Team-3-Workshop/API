@@ -42,14 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true
       },
-      password: {
-        type: DataTypes.STRING,
-        set(value) {
-          const salt = bcrypt.genSaltSync();
-          const hash = bcrypt.hashSync(value, salt);
-          this.setDataValue("password", hash);
-        },
-      },
+      password: DataTypes.STRING,
       role: DataTypes.ENUM("user", "admin"),
     },
     {

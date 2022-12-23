@@ -101,7 +101,7 @@ module.exports = {
     if (!user) {
       return res.status(404).json({
         success: true,
-        message: "User Found",
+        message: "User not Found",
         data: user,
       });
     }

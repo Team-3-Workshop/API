@@ -122,7 +122,24 @@ module.exports = {
       });
     }
 
-    const user = await User.create(req.body);
+    const { firstName, lastName, fullName, citizen, address, date, nik, phone, email, password, role } = req.body
+    
+    const salt = bcrypt.genSaltSync()
+    const hashPassword = bcrypt.hashSync(password, salt)
+
+    const user = await User.create({
+      firstName: firstName,
+      lastName: lastName,
+      fullName: fullName,
+      citizen: citizen,
+      nik: nik,
+      address: address,
+      date: date,
+      phone: phone,
+      email: email,
+      password: hashPassword,
+      role: role,
+    });
 
     res.status(201).json({
       success: true,
@@ -132,4 +149,87 @@ module.exports = {
 
     next();
   },
+  forgot: async (req, res) => {
+    const schema = {
+      email: {
+        type: "email",
+        empty: false
+      }
+    }
+    
+    const validated = v.validate(req.body, schema);
+    
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+    
+    const { email } = req.body
+
+    const user = await User.findOne({ where: { email } })
+
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: user
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User found",
+      data: user
+    })
+  },
+  reset: async (req, res) => {
+    const schema = {
+      id: {
+        type: "uuid",
+        empty: false
+      },
+      password: {
+        type: "string",
+        min: 8,
+        singleLine: true,
+        empty: false
+      }
+    }
+    
+    const validated = v.validate(req.body, schema);
+    
+    if (validated.length) {
+      return res.status(400).json({
+        success: false,
+        message: validated[0].message,
+        data: null,
+      });
+    }
+
+    const { id, password } = req.body
+
+    let user = await User.findByPk(id)
+
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        data: user
+      })
+    }
+
+    const salt = bcrypt.genSaltSync()
+    const newPassword = bcrypt.hashSync(password, salt)
+
+    user = await user.update({password: newPassword})
+
+    res.status(200).json({
+      success: true,
+      message: "Password has been reseted successfully!",
+      data: user
+    })
+  }
 };

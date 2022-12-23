@@ -53,7 +53,7 @@ module.exports = {
         password: hash("adam1234"),
         createdAt: new Date(),
         updatedAt: new Date(),
-        role: "user",
+        role: "admin",
       },
       {
         id: uuidv4(),
