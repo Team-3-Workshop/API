@@ -1,8 +1,27 @@
+require("dotenv").config();
+
 const Validator = require("fastest-validator");
 const { Hotel, Tour, Sequelize } = require("../db/models");
-const { QueryTypes } = require("sequelize");
+const { google } = require("googleapis");
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 const v = new Validator();
+
+const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, REFRESH_TOKEN } = process.env;
+
+const oauth2Client = new google.auth.OAuth2(
+  CLIENT_ID,
+  CLIENT_SECRET,
+  REDIRECT_URI
+);
+
+oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+const drive = google.drive({
+  version: "v3",
+  auth: oauth2Client,
+});
 
 module.exports = {
   get: async (req, res, next) => {
@@ -73,26 +92,29 @@ module.exports = {
 
     next();
   },
-  create: async (req, res, next) => {
+  create: async function (req, res, next) {
+    console.log(req.body);
     const schema = {
       name: {
         type: "string",
-        empty: false
+        empty: false,
       },
-      adrress: {
+      address: {
         type: "string",
         empty: false,
         optional: true,
       },
       description: {
         type: "string",
-        empty: false
+        empty: false,
       },
+      price: {
+        type: "number",
+        empty: false
+      }
     };
 
-    
     const validated = v.validate(req.body, schema);
-    console.log(validated)
 
     if (validated.length) {
       return res.status(400).json({
@@ -102,7 +124,33 @@ module.exports = {
       });
     }
 
-    const hotel = await Hotel.create(req.body);
+    const { name, address, description, price } = req.body;
+    // const photo = './public/images/' + req.file.originalname;
+
+    // const folderId = "1eJMYUxw1vDizjvZc9qWd8CDdd7piZKXy";
+
+    // const fileMetadata = {
+    //   name: uuidv4() + ".jpg",
+    //   parents: [folderId],
+    // };
+    
+    // const media = {
+    //   mimeType: "image/jpeg",
+    //   body: fs.createReadStream(photo),
+    // };
+
+    // const file = await drive.files.create({
+    //   resource: fileMetadata,
+    //   media: media,
+    //   fields: 'id',
+    // })
+
+    const hotel = await Hotel.create({
+      name,
+      address,
+      description,
+      price
+    });
 
     res.status(201).json({
       success: true,
@@ -141,6 +189,11 @@ module.exports = {
         empty: false,
         optional: true,
       },
+      price: {
+        type: "number",
+        empty: false,
+        optional: true
+      }
     };
 
     const validated = v.validate(req.body, schema);
@@ -175,6 +228,10 @@ module.exports = {
         data: hotel,
       });
     }
+
+    // await drive.files.delete({
+    //   fileId: hotel.photo
+    // })
 
     await hotel.destroy();
 

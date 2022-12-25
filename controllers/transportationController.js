@@ -86,6 +86,9 @@ module.exports = {
       capacity: {
         type: "number",
       },
+      price: {
+        type: "number",
+      },
       description: {
         type: "string",
       },
@@ -130,6 +133,10 @@ module.exports = {
         optional: true,
       },
       capacity: {
+        type: "number",
+        optional: true,
+      },
+      price: {
         type: "number",
         optional: true,
       },
