@@ -65,7 +65,7 @@ module.exports = {
     if (address) where.address = { [Sequelize.Op.like]: `%${address}%` };
     if (phone) where.phone = { [Sequelize.Op.like]: `%${phone}%` };
 
-    const users = await User.findAll({
+    const users = await User.findAndCountAll({
       where,
       order: [["firstName", "ASC"]],
     });

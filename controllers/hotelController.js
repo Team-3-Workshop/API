@@ -48,7 +48,7 @@ module.exports = {
 
     if (name) where.name = { [Sequelize.Op.like]: `%${name}%` };
 
-    const hotels = await Hotel.findAll({
+    const hotels = await Hotel.findAndCountAll({
       where,
       order: [["name", "ASC"]],
     });

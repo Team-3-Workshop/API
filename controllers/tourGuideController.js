@@ -45,12 +45,12 @@ module.exports = {
     if (fullName) where.fullName = { [Sequelize.Op.like]: `%${fullName}%` };
     if (address) where.address = { [Sequelize.Op.like]: `%${address}%` };
 
-    const tourGuides = await TourGuide.findAll({
+    const tourGuides = await TourGuide.findAndCountAll({
       where,
       order: [["firstName", "ASC"]],
     });
 
-    if (!tourGuides.length) {
+    if (!tourGuides) {
       return res.status(404).json({
         success: false,
         message: "Tour Guides not Found",

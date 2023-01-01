@@ -34,7 +34,7 @@ module.exports = {
     if (name) where.name = { [Sequelize.Op.like]: `%${name}%` };
     if (capacity) where.capacity = { [Sequelize.Op.like]: `%${capacity}%` };
 
-    const transpotations = await Transportation.findAll({
+    const transpotations = await Transportation.findAndCountAll({
       where,
       order: [["name", "ASC"]],
     });

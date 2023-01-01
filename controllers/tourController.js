@@ -35,7 +35,7 @@ module.exports = {
     if (destination)
       where.destination = { [Sequelize.Op.like]: `%${destination}%` };
 
-    const tours = await Tour.findAll({
+    const tours = await Tour.findAndCountAll({
       where,
       include: [
         {
