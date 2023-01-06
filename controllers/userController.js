@@ -70,7 +70,7 @@ module.exports = {
       order: [["firstName", "ASC"]],
     });
 
-    if (!users.length) {
+    if (!users) {
       return res.status(404).json({
         success: false,
         message: "Users not Found",
